@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: employee-management-service
+  datasource:
+    url: jdbc:postgresql://localhost:5433/employee_management
+    username: emp_user
+    password: emp_man_password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        order_updates: true
+
+  sql:
+    init:
+      mode: always
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9093
+      bindings:
+        # StreamBridge alternative:
+        # orderProducer-out-0:
+        #   destination: orders
+        #   content-type: application/json
+        # Spring Cloud Stream alternative:
+        # orderConsumer-in-0:
+        #   destination: orders
+        #   group: order-consumers
+        #   content-type: application/json
+        debeziumEventConsumer-in-0:
+          destination: pg-changes.public.outbox_event
+          group: 1
+          content-type: application/json
