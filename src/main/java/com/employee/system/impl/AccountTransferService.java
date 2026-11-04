@@ -64,8 +64,8 @@ public class AccountTransferService {
                 .sorted()
                 .toList();
         Map<Long, BankAccount> accountsById = bankAccountRepository
-                //.lockByAccountIds(accountIds)
-                .findAllByAccountIdInOrderByAccountIdAsc(accountIds)
+                .lockByAccountIds(accountIds)
+                //.findAllByAccountIdInOrderByAccountIdAsc(accountIds) // for optimistic lock
                 .stream()
                 .collect(Collectors.toMap(BankAccount::getAccountId, Function.identity()));
 

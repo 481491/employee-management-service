@@ -20,9 +20,9 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Long> 
 
     boolean existsByEmployee_IdAndAccountIdNot(UUID employeeId, long accountId);
 
-    /*@Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select account from BankAccount account where account.accountId in :accountIds order by account.accountId")
-    List<BankAccount> lockByAccountIds(@Param("accountIds") List<Long> accountIds);*/
+    List<BankAccount> lockByAccountIds(@Param("accountIds") List<Long> accountIds);
 
     List<BankAccount> findAllByAccountIdInOrderByAccountIdAsc(List<Long> accountIds);
 }
