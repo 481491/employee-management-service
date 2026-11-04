@@ -20,10 +20,16 @@ spring:
     init:
       mode: always
   cloud:
+    function:
+      definition: transactionOutBoxConsumer
     stream:
       kafka:
         binder:
           brokers: localhost:9093
+        bindings:
+          transactionOutBoxConsumer-in-0:
+            consumer:
+              startOffset: earliest
       bindings:
         # StreamBridge alternative:
         # orderProducer-out-0:
@@ -34,7 +40,7 @@ spring:
         #   destination: orders
         #   group: order-consumers
         #   content-type: application/json
-        debeziumEventConsumer-in-0:
-          destination: pg-changes.public.outbox_event
+        transactionOutBoxConsumer-in-0:
+          destination: outbox.event.TRANSACTION
           group: 1
           content-type: application/json

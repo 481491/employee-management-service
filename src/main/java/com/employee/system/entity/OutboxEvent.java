@@ -1,6 +1,7 @@
 package com.employee.system.entity;
 
 import com.employee.system.enums.EventStatus;
+import com.employee.system.model.outbox.TransactionCreatedEvent;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -28,6 +29,10 @@ public class OutboxEvent {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private String payload;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private TransactionCreatedEvent payloadJson;
 
     @Enumerated(EnumType.STRING)
     private EventStatus status;

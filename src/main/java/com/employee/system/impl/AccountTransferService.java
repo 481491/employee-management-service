@@ -109,6 +109,7 @@ public class AccountTransferService {
                 .aggregateId(transaction.getTransactionId())
                 .eventType("TRANSACTION_CREATED")
                 .payload(objectMapper.writeValueAsString(event))
+                .payloadJson(event)
                 .status(EventStatus.PENDING)
                 .createdAt(Instant.now())
                 .processedAt(Instant.now())

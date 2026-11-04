@@ -85,7 +85,8 @@ services:
             "database.password": "emp_man_password",
             "name": "postgresql-connector",
             "connector.id": "postgres",
-            "plugin.name": "pgoutput"
+            "plugin.name": "pgoutput",
+            "slot.name": "employee_management_outbox_slot"
           } 
         }
     command: >
