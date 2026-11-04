@@ -1,5 +1,6 @@
 package com.employee.system.impl.kafka;
 
+import com.employee.system.exception.PermanentProcessingException;
 import com.employee.system.model.outbox.TransactionCreatedEvent;
 import com.employee.system.repositories.AuditRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,6 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 @Component
 public class TransactionOutBoxConsumer implements Consumer<JsonNode> {
-    private final AuditRepository auditRepository;
     private final ObjectMapper objectMapper;
 
 
@@ -26,9 +26,11 @@ public class TransactionOutBoxConsumer implements Consumer<JsonNode> {
                 || event.sourceAccountId() == null
                 || event.destinationAccountId() == null
                 || event.amount() == null) {
-            throw new IllegalArgumentException("Transaction-created event is missing required fields");
+            throw new PermanentProcessingException("Transaction-created event is missing required fields");
         }
         log.info("Received transaction-created event: {}", event);
+
+
     }
 
     private JsonNode extractEventPayload(JsonNode message) {

@@ -27,6 +27,6 @@ public class BankAccount {
     private Employee employee;
 
     // Optimistic-locking alternative:
-     @Version
-     private Long version;
+/*     @Version
+     private Long version;*/
 }

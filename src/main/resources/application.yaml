@@ -30,6 +30,8 @@ spring:
           transactionOutBoxConsumer-in-0:
             consumer:
               startOffset: earliest
+              enable-dlq: true
+              dlq-name: transaction-created-dlq
       bindings:
         # StreamBridge alternative:
         # orderProducer-out-0:
@@ -44,3 +46,5 @@ spring:
           destination: outbox.event.TRANSACTION
           group: 1
           content-type: application/json
+          consumer:
+            max-attempts: 3
