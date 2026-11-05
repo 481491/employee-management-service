@@ -1,6 +1,7 @@
 package com.employee.system.impl.kafka;
 
 import com.employee.system.exception.PermanentProcessingException;
+import com.employee.system.impl.IdempotencyService;
 import com.employee.system.model.outbox.TransactionCreatedEvent;
 import com.employee.system.repositories.AuditRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.function.Consumer;
 @Component
 public class TransactionOutBoxConsumer implements Consumer<JsonNode> {
     private final ObjectMapper objectMapper;
+    private final IdempotencyService idempotencyService;
 
 
     @Override
@@ -28,9 +30,11 @@ public class TransactionOutBoxConsumer implements Consumer<JsonNode> {
                 || event.amount() == null) {
             throw new PermanentProcessingException("Transaction-created event is missing required fields");
         }
+
+        if(idempotencyService.alreadyProcessed(event.sourceAccountId())) {
+            log.info("Duplicate event ignored");
+        }
         log.info("Received transaction-created event: {}", event);
-
-
     }
 
     private JsonNode extractEventPayload(JsonNode message) {

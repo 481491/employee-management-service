@@ -2,9 +2,9 @@ spring:
   application:
     name: employee-management-service
   datasource:
-    url: jdbc:postgresql://localhost:5433/employee_management
-    username: emp_user
-    password: emp_man_password
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/employee_management}
+    username: ${SPRING_DATASOURCE_USERNAME:emp_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:emp_man_password}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -25,7 +25,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: localhost:9093
+          brokers: ${SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS:localhost:9093}
         bindings:
           transactionOutBoxConsumer-in-0:
             consumer:
@@ -48,3 +48,9 @@ spring:
           content-type: application/json
           consumer:
             max-attempts: 3
+  cache:
+    type: redis
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}

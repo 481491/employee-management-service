@@ -27,7 +27,7 @@ public class ConcurrentAccountTransfer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        int THREAD = 10;
+        int THREAD = 1;
         List<Long> accounts = List.of(1L, 2L, 3L);
         Random random = new Random();
         ExecutorService executor = Executors.newFixedThreadPool(10);

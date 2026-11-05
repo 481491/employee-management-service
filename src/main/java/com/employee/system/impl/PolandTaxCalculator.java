@@ -1,44 +1,37 @@
 package com.employee.system.impl;
 
 import com.employee.system.model.TaxResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Service
+@RequiredArgsConstructor
 public class PolandTaxCalculator {
 
     private static final BigDecimal PENSION_RATE = new BigDecimal("0.0976");
     private static final BigDecimal DISABILITY_RATE = new BigDecimal("0.015");
     private static final BigDecimal SICKNESS_RATE = new BigDecimal("0.0245");
     private static final BigDecimal HEALTH_RATE = new BigDecimal("0.09");
+    private final IdempotencyService idempotencyService;
 
-    public TaxResponse calculate(
-            BigDecimal grossSalary,
-            boolean pit2) {
+    public TaxResponse calculate(BigDecimal grossSalary, boolean pit2) {
 
-        BigDecimal pension =
-                grossSalary.multiply(PENSION_RATE);
+        BigDecimal pension = grossSalary.multiply(PENSION_RATE);
 
-        BigDecimal disability =
-                grossSalary.multiply(DISABILITY_RATE);
+        BigDecimal disability = grossSalary.multiply(DISABILITY_RATE);
 
-        BigDecimal sickness =
-                grossSalary.multiply(SICKNESS_RATE);
+        BigDecimal sickness = grossSalary.multiply(SICKNESS_RATE);
 
-        BigDecimal social =
-                pension.add(disability)
-                        .add(sickness);
+        BigDecimal social = pension.add(disability).add(sickness);
 
-        BigDecimal taxableBase =
-                grossSalary.subtract(social);
+        BigDecimal taxableBase = grossSalary.subtract(social);
 
-        BigDecimal health =
-                taxableBase.multiply(HEALTH_RATE);
+        BigDecimal health = taxableBase.multiply(HEALTH_RATE);
 
-        BigDecimal tax =
-                taxableBase.multiply(new BigDecimal("0.12"));
+        BigDecimal tax = taxableBase.multiply(new BigDecimal("0.12"));
 
         if (pit2) {
             tax = tax.subtract(new BigDecimal("300"));

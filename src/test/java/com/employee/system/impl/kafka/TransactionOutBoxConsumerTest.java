@@ -1,5 +1,6 @@
 package com.employee.system.impl.kafka;
 
+import com.employee.system.impl.IdempotencyService;
 import com.employee.system.model.outbox.TransactionCreatedEvent;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,8 @@ import static org.mockito.Mockito.*;
 public class TransactionOutBoxConsumerTest {
     private final ObjectMapper objectMapper = mock(ObjectMapper.class);
     private final ObjectMapper testMapper = new ObjectMapper();
+    private final IdempotencyService idempotencyService = mock(IdempotencyService.class);
+
     @InjectMocks
     private TransactionOutBoxConsumer sut;
 
@@ -41,6 +44,7 @@ public class TransactionOutBoxConsumerTest {
                 new TransactionCreatedEvent(3156L,
                         1L, 2L, new BigDecimal("500"))
         );
+        when(idempotencyService.alreadyProcessed(3156L)).thenReturn(Boolean.TRUE);
         sut.accept(message);
         // when(objectMapper.treeToValue())
 
