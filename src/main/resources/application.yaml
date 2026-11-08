@@ -54,3 +54,37 @@ spring:
     redis:
       host: ${SPRING_DATA_REDIS_HOST:localhost}
       port: ${SPRING_DATA_REDIS_PORT:6379}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,circuitbreakers
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+#monitor last 10 calls
+#after at least 5 calls
+#if more than 50% fail
+#move to OPEN state
+#stay open for 30s
+#allow 3 trial requests
+#close again if successful
+resilience4j:
+  circuitbreaker:
+    instances:
+      faulttolencetest:
+       slidingWindowSize: 10
+       minimumNumberOfCalls: 5
+       failureRateThreshold: 50
+       waitDurationInOpenState: 30s
+       permittedNumberOfCallsInHalfOpenState: 3
+  bulkhead:
+    instances:
+      urlShortener:
+        maxConcurrentCalls: 10
+        maxWaitDuration: 1s
